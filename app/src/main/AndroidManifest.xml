@@ -5,8 +5,8 @@
         android:theme="@style/AppTheme"
         android:label="Kehadiran Sekolah Minggu"
         android:description="Aplikasi rekod kehadiran Sekolah Minggu"
-        android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_church"
+        android:roundIcon="@drawable/ic_church"
         android:usesCleartextTraffic="true"
         android:allowBackup="true">
 
