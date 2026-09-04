@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Kehadiran Sekolah Minggu</title>
+
+<style>
+:root{
+--navy:#0b1f3a;
+--blue:#1e5aa8;
+--gold:#d6a63c;
+--bg:#f3f6fa;
+--green:#198754;
+--red:#c0392b;
+--orange:#d97706;
+--text:#152238
+}
+
+*{box-sizing:border-box}
+
+body{
+margin:0;
+background:var(--bg);
+font-family:Arial,sans-serif;
+color:var(--text)
+}
+
+header{
+background:linear-gradient(135deg,var(--navy),var(--blue));
+color:white;
+padding:18px 16px 16px;
+position:sticky;
+top:0;
+z-index:5;
+box-shadow:0 3px 12px #0002
+}
+
+header h1{
+font-size:21px;
+margin:0 0 4px
+}
+
+header small{
+opacity:.85
+}
+
+main{
+max-width:760px;
+margin:auto;
+padding:14px 12px 90px
+}
+
+.card{
+background:white;
+border-radius:16px;
+padding:14px;
+margin-bottom:12px;
+box-shadow:0 2px 10px #0000000d
+}
+
+.row{
+display:flex;
+gap:8px;
+align-items:center
+}
+
+.row>*{
+min-width:0
+}
+
+input,select,button,textarea{
+font:inherit
+}
+
+input,select,textarea{
+width:100%;
+padding:11px 12px;
+border:1px solid #d5dce6;
+border-radius:10px;
+background:#fff
+}
+
+button{
+border:0;
+border-radius:10px;
+padding:11px 13px;
+font-weight:700;
+cursor:pointer
+}
+
+.primary{
+background:var(--blue);
+color:white
+}
+
+.secondary{
+background:#e9eef5;
+color:var(--navy)
+}
+
+.gold{
+background:var(--gold);
+color:#fff
+}
+
+.danger{
+background:#fde9e7;
+color:var(--red)
+}
+
+h2{
+font-size:16px;
+margin:0 0 10px
+}
+
+.muted{
+color:#667085;
+font-size:13px
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:8px
+}
+
+.stat{
+padding:12px;
+border-radius:12px;
+text-align:center;
+background:#eef4fb
+}
+
+.stat b{
+display:block;
+font-size:22px
+}
+
+.stat span{
+font-size:12px;
+color:#667085
+}
+
+.tabs{
+display:flex;
+gap:6px;
+margin-bottom:12px
+}
+
+.tabs button{
+flex:1
+}
+
+.tabs .active{
+background:var(--navy);
+color:white
+}
+
+.student{
+display:flex;
+align-items:center;
+gap:9px;
+padding:10px 0;
+border-bottom:1px solid #edf0f4
+}
+
+.student:last-child{
+border-bottom:0
+}
+
+.name{
+flex:1;
+font-weight:700
+}
+
+.status{
+display:flex;
+gap:5px
+}
+
+.status button{
+padding:8px 9px;
+font-size:12px
+}
+
+.present{
+background:#dff5e8;
+color:#11733e
+}
+
+.absent{
+background:#fde4e1;
+color:#a62b20
+}
+
+.late{
+background:#fff0d4;
+color:#a35b00
+}
+
+.selected{
+outline:2px solid currentColor
+}
+
+.badge{
+display:inline-block;
+padding:5px 8px;
+border-radius:999px;
+font-size:11px;
+font-weight:700
+}
+
+.history-row{
+padding:10px 0;
+border-bottom:1px solid #edf0f4
+}
+
+.history-row:last-child{
+border:0
+}
+
+.empty{
+text-align:center;
+color:#77829a;
+padding:22px 8px
+}
+
+footer{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:white;
+border-top:1px solid #ddd;
+padding:9px 12px;
+z-index:4
+}
+
+footer .row{
+max-width:760px;
+margin:auto
+}
+
+.modal{
+position:fixed;
+inset:0;
+background:#0007;
+display:none;
+align-items:flex-end;
+z-index:10
+}
+
+.modal.show{
+display:flex
+}
+
+.sheet{
+background:white;
+width:100%;
+max-height:88vh;
+overflow:auto;
+border-radius:18px 18px 0 0;
+padding:18px
+}
+
+@media(min-width:600px){
+.modal{
+align-items:center
+}
+
+.sheet{
+max-width:650px;
+border-radius:18px
+}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>⛪ Kehadiran Sekolah Minggu</h1>
+<small>Rekod kehadiran pelajar • Offline</small>
+</header>
+
+<main>
+
+<div class="card">
+<div class="row">
+
+<div style="flex:1">
+<label class="muted">Tarikh</label>
+<input id="date" type="date">
+</div>
+
+<div style="flex:1">
+<label class="muted">Kelas / Kumpulan</label>
+<select id="group"></select>
+</div>
+
+</div>
+</div>
+
+<div class="tabs">
+
+<button id="tabAttend"
+class="active"
+onclick="showTab('attend')">
+Kehadiran
+</button>
+
+<button id="tabStudents"
+onclick="showTab('students')">
+Pelajar
+</button>
+
+<button id="tabHistory"
+onclick="showTab('history')">
+Rekod
+</button>
+
+</div>
+
+<section id="attend">
+
+<div class="card">
+
+<div class="row">
+
+<h2 style="flex:1">
+Senarai Pelajar
+</h2>
+
+<button class="secondary"
+onclick="allPresent()">
+Semua Hadir
+</button>
+
+</div>
+
+<input id="search"
+placeholder="Cari nama pelajar..."
+oninput="renderAttendance()">
+
+<div id="stats"
+class="stats"
+style="margin-top:10px">
+</div>
+
+<div id="attendanceList"
+style="margin-top:6px">
+</div>
+
+<button class="primary"
+style="width:100%;margin-top:12px"
+onclick="saveAttendance()">
+💾 Simpan Kehadiran
+</button>
+
+</div>
+
+</section>
+
+<section id="students" style="display:none">
+
+<div class="card">
+
+<h2>
+Tambah Pelajar
+</h2>
+
+<div class="row">
+
+<input id="newName"
+placeholder="Nama pelajar">
+
+<button class="primary"
+onclick="addStudent()">
+Tambah
+</button>
+
+</div>
+
+<div style="margin-top:10px">
+
+<input id="newGroup"
+placeholder="Nama kelas baru (contoh: Kanak-kanak)">
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>
+Senarai Pelajar
+</h2>
+
+<div id="studentList">
+</div>
+
+</div>
+
+</section>
+
+<section id="history" style="display:none">
+
+<div class="card">
+
+<div class="row">
+
+<h2 style="flex:1">
+Rekod Kehadiran
+</h2>
+
+<button class="danger"
+onclick="clearHistory()">
+Padam Semua
+</button>
+
+</div>
+
+<div id="historyList">
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+<footer>
+
+<div class="row">
+
+<button class="secondary"
+style="flex:1"
+onclick="openSettings()">
+⚙️ Tetapan
+</button>
+
+<button class="gold"
+style="flex:1"
+onclick="backup()">
+📤 Sandaran
+</button>
+
+</div>
+
+</footer>
+
+<div id="modal"
+class="modal"
+onclick="if(event.target.id==='modal')closeModal()">
+
+<div class="sheet">
+
+<h2 id="modalTitle">
+Tetapan
+</h2>
+
+<p id="modalInfo"
+class="muted">
+Tetapan ini menunjukkan jumlah pelajar dan kumpulan yang tersimpan dalam telefon.
+</p>
+
+<div id="settingsPanel">
+
+<div class="muted"
+style="margin-bottom:6px">
+Jumlah pelajar
+</div>
+
+<div id="studentCount"
+style="font-size:24px;font-weight:800;margin-bottom:12px">
+0
+</div>
+
+<div class="muted"
+style="margin-bottom:6px">
+Jumlah kumpulan
+</div>
+
+<div id="groupCount"
+style="font-size:24px;font-weight:800">
+0
+</div>
+
+</div>
+
+<textarea id="backupText"
+rows="8"
+placeholder="Data sandaran akan muncul di sini"
+style="display:none">
+</textarea>
+
+<div class="row"
+style="margin-top:12px">
+
+<button class="secondary"
+style="flex:1"
+onclick="closeModal()">
+Tutup
+</button>
+
+<button id="copyBtn"
+class="primary"
+style="flex:1;display:none"
+onclick="copyBackup()">
+Salin Data
+</button>
+
+</div>
+
+</div>
+</div>
+
+<script>
+
+const KEY='sm_attendance_v2';
+
+let db=JSON.parse(localStorage.getItem(KEY)||'null');
+
+if(!db){
+
+const old=JSON.parse(
+localStorage.getItem('sm_attendance_v1')||'null'
+);
+
+db=old||{
+groups:{
+'Sekolah Minggu':[]
+},
+students:[],
+records:[]
+};
+
+}
+
+db.groups=db.groups||{
+'Sekolah Minggu':[]
+};
+
+db.students=
+Array.isArray(db.students)?
+db.students:[];
+
+db.records=
+Array.isArray(db.records)?
+db.records:[];
+
+
+const $=id=>document.getElementById(id);
+
+
+function persist(){
+localStorage.setItem(
+KEY,
+JSON.stringify(db)
+);
+}
+
+
+function today(){
+return new Date()
+.toISOString()
+.slice(0,10);
+}
+
+
+$('date').value=today();
+
+
+function groups(){
+
+let gs=[
+...new Set([
+'Sekolah Minggu',
+...Object.keys(db.groups||{}),
+...db.students.map(
+s=>s.group||'Sekolah Minggu'
+)
+])
+];
+
+return gs.filter(Boolean);
+
+}
+
+
+function renderGroups(){
+
+let g=groups();
+
+let old=$('group').value;
+
+$('group').innerHTML=
+g.map(x=>
+`<option value="${esc(x)}">${esc(x)}</option>`
+).join('');
+
+if(g.includes(old))
+$('group').value=old;
+
+else if(g.length)
+$('group').value=g[0];
+
+}
+
+
+function norm(v){
+return String(v??'')
+.trim()
+.toLowerCase();
+}
+
+
+function studentsForGroup(){
+
+const selected=
+norm(
+$('group').value||
+'Sekolah Minggu'
+);
+
+return db.students.filter(
+s=>
+norm(
+s.group||'Sekolah Minggu'
+)===selected
+);
+
+}
+
+
+function recordFor(){
+
+return db.records.find(
+r=>
+r.date===$('date').value&&
+r.group===$('group').value
+);
+
+}
+
+
+function renderAttendance(){
+
+let arr=studentsForGroup();
+
+let rec=recordFor();
+
+let map=rec?
+rec.status:{};
+
+let q=
+$('search')
+.value
+.trim()
+.toLowerCase();
+
+if(q)
+arr=arr.filter(
+s=>
+s.name
+.toLowerCase()
+.includes(q)
+);
+
+let all=studentsForGroup();
+
+let present=
+all.filter(
+s=>map[s.id]==='Hadir'
+).length;
+
+let late=
+all.filter(
+s=>map[s.id]==='Lewat'
+).length;
+
+let absent=
+all.filter(
+s=>map[s.id]==='Tidak Hadir'
+).length;
+
+
+$('stats').innerHTML=`
+
+<div class="stat">
+<b>${present}</b>
+<span>Hadir</span>
+</div>
+
+<div class="stat">
+<b>${late}</b>
+<span>Lewat</span>
+</div>
+
+<div class="stat">
+<b>${absent}</b>
+<span>Tidak Hadir</span>
+</div>
+
+`;
+
+
+$('attendance
