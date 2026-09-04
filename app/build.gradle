@@ -1,0 +1,19 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.example.kehadiran'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.example.kehadiran'
+        minSdk 23
+        targetSdk 35
+        versionCode 4
+        versionName '1.3'
+    }
+}
+
+dependencies {
+}
