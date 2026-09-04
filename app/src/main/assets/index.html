@@ -1,282 +1,26 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ms">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Kehadiran Sekolah Minggu</title>
-
 <style>
-:root{
---navy:#0b1f3a;
---blue:#1e5aa8;
---gold:#d6a63c;
---bg:#f3f6fa;
---green:#198754;
---red:#c0392b;
---orange:#d97706;
---text:#152238
-}
-
-*{box-sizing:border-box}
-
-body{
-margin:0;
-background:var(--bg);
-font-family:Arial,sans-serif;
-color:var(--text)
-}
-
-header{
-background:linear-gradient(135deg,var(--navy),var(--blue));
-color:white;
-padding:18px 16px 16px;
-position:sticky;
-top:0;
-z-index:5;
-box-shadow:0 3px 12px #0002
-}
-
-header h1{
-font-size:21px;
-margin:0 0 4px
-}
-
-header small{
-opacity:.85
-}
-
-main{
-max-width:760px;
-margin:auto;
-padding:14px 12px 90px
-}
-
-.card{
-background:white;
-border-radius:16px;
-padding:14px;
-margin-bottom:12px;
-box-shadow:0 2px 10px #0000000d
-}
-
-.row{
-display:flex;
-gap:8px;
-align-items:center
-}
-
-.row>*{
-min-width:0
-}
-
-input,select,button,textarea{
-font:inherit
-}
-
-input,select,textarea{
-width:100%;
-padding:11px 12px;
-border:1px solid #d5dce6;
-border-radius:10px;
-background:#fff
-}
-
-button{
-border:0;
-border-radius:10px;
-padding:11px 13px;
-font-weight:700;
-cursor:pointer
-}
-
-.primary{
-background:var(--blue);
-color:white
-}
-
-.secondary{
-background:#e9eef5;
-color:var(--navy)
-}
-
-.gold{
-background:var(--gold);
-color:#fff
-}
-
-.danger{
-background:#fde9e7;
-color:var(--red)
-}
-
-h2{
-font-size:16px;
-margin:0 0 10px
-}
-
-.muted{
-color:#667085;
-font-size:13px
-}
-
-.stats{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:8px
-}
-
-.stat{
-padding:12px;
-border-radius:12px;
-text-align:center;
-background:#eef4fb
-}
-
-.stat b{
-display:block;
-font-size:22px
-}
-
-.stat span{
-font-size:12px;
-color:#667085
-}
-
-.tabs{
-display:flex;
-gap:6px;
-margin-bottom:12px
-}
-
-.tabs button{
-flex:1
-}
-
-.tabs .active{
-background:var(--navy);
-color:white
-}
-
-.student{
-display:flex;
-align-items:center;
-gap:9px;
-padding:10px 0;
-border-bottom:1px solid #edf0f4
-}
-
-.student:last-child{
-border-bottom:0
-}
-
-.name{
-flex:1;
-font-weight:700
-}
-
-.status{
-display:flex;
-gap:5px
-}
-
-.status button{
-padding:8px 9px;
-font-size:12px
-}
-
-.present{
-background:#dff5e8;
-color:#11733e
-}
-
-.absent{
-background:#fde4e1;
-color:#a62b20
-}
-
-.late{
-background:#fff0d4;
-color:#a35b00
-}
-
-.selected{
-outline:2px solid currentColor
-}
-
-.badge{
-display:inline-block;
-padding:5px 8px;
-border-radius:999px;
-font-size:11px;
-font-weight:700
-}
-
-.history-row{
-padding:10px 0;
-border-bottom:1px solid #edf0f4
-}
-
-.history-row:last-child{
-border:0
-}
-
-.empty{
-text-align:center;
-color:#77829a;
-padding:22px 8px
-}
-
-footer{
-position:fixed;
-bottom:0;
-left:0;
-right:0;
-background:white;
-border-top:1px solid #ddd;
-padding:9px 12px;
-z-index:4
-}
-
-footer .row{
-max-width:760px;
-margin:auto
-}
-
-.modal{
-position:fixed;
-inset:0;
-background:#0007;
-display:none;
-align-items:flex-end;
-z-index:10
-}
-
-.modal.show{
-display:flex
-}
-
-.sheet{
-background:white;
-width:100%;
-max-height:88vh;
-overflow:auto;
-border-radius:18px 18px 0 0;
-padding:18px
-}
-
-@media(min-width:600px){
-.modal{
-align-items:center
-}
-
-.sheet{
-max-width:650px;
-border-radius:18px
-}
-}
+*{box-sizing:border-box}body{margin:0;background:#f3f6fa;font-family:Arial;color:#152238}
+header{background:linear-gradient(135deg,#0b1f3a,#1e5aa8);color:#fff;padding:18px 15px}
+h1{font-size:21px;margin:0 0 5px}main{max-width:700px;margin:auto;padding:12px 10px 80px}
+.card{background:#fff;border-radius:15px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px #0001}
+.row{display:flex;gap:8px;align-items:center}.row>*{min-width:0}
+input,select,button,textarea{font:inherit}input,select,textarea{width:100%;padding:11px;border:1px solid #ccd4df;border-radius:10px}
+button{border:0;border-radius:10px;padding:10px;font-weight:bold}.blue{background:#1e5aa8;color:white}.gray{background:#e9eef5}.red{background:#fde5e2;color:#b52b20}.gold{background:#d6a63c;color:white}
+.tabs{display:flex;gap:5px;margin-bottom:12px}.tabs button{flex:1}.active{background:#0b1f3a!important;color:white}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0}.stat{text-align:center;background:#eef4fb;padding:10px;border-radius:10px}.stat b{display:block;font-size:22px}
+.student{display:flex;align-items:center;gap:7px;padding:10px 0;border-bottom:1px solid #eee}.name{flex:1;font-weight:bold}
+.status{display:flex;gap:3px}.status button{padding:7px;font-size:11px}.hadir{background:#dff5e8;color:#11733e}.lewat{background:#fff0d4;color:#a35b00}.tidak{background:#fde4e1;color:#a62b20}.sel{outline:2px solid currentColor}
+.empty{text-align:center;color:#777;padding:20px}
+footer{position:fixed;bottom:0;left:0;right:0;background:white;padding:8px;border-top:1px solid #ddd}footer .row{max-width:700px;margin:auto}
+.modal{display:none;position:fixed;inset:0;background:#0007;align-items:flex-end}.modal.show{display:flex}.sheet{background:white;width:100%;padding:18px;border-radius:18px 18px 0 0}
 </style>
 </head>
-
 <body>
 
 <header>
@@ -288,422 +32,270 @@ border-radius:18px
 
 <div class="card">
 <div class="row">
-
-<div style="flex:1">
-<label class="muted">Tarikh</label>
-<input id="date" type="date">
-</div>
-
-<div style="flex:1">
-<label class="muted">Kelas / Kumpulan</label>
-<select id="group"></select>
-</div>
-
+<div style="flex:1"><small>Tarikh</small><input id="date" type="date"></div>
+<div style="flex:1"><small>Kumpulan</small><select id="group"></select></div>
 </div>
 </div>
 
 <div class="tabs">
-
-<button id="tabAttend"
-class="active"
-onclick="showTab('attend')">
-Kehadiran
-</button>
-
-<button id="tabStudents"
-onclick="showTab('students')">
-Pelajar
-</button>
-
-<button id="tabHistory"
-onclick="showTab('history')">
-Rekod
-</button>
-
+<button id="t1" class="active" onclick="tab('a')">Kehadiran</button>
+<button id="t2" onclick="tab('p')">Pelajar</button>
+<button id="t3" onclick="tab('r')">Rekod</button>
 </div>
 
-<section id="attend">
-
+<section id="a">
 <div class="card">
-
-<div class="row">
-
-<h2 style="flex:1">
-Senarai Pelajar
-</h2>
-
-<button class="secondary"
-onclick="allPresent()">
-Semua Hadir
-</button>
-
+<div class="row"><h3 style="flex:1">Senarai Pelajar</h3><button class="gray" onclick="allHere()">Semua Hadir</button></div>
+<input id="search" placeholder="Cari nama pelajar...">
+<div id="stats" class="stats"></div>
+<div id="alist"></div>
+<button class="blue" style="width:100%;margin-top:12px" onclick="save()">💾 Simpan Kehadiran</button>
 </div>
-
-<input id="search"
-placeholder="Cari nama pelajar..."
-oninput="renderAttendance()">
-
-<div id="stats"
-class="stats"
-style="margin-top:10px">
-</div>
-
-<div id="attendanceList"
-style="margin-top:6px">
-</div>
-
-<button class="primary"
-style="width:100%;margin-top:12px"
-onclick="saveAttendance()">
-💾 Simpan Kehadiran
-</button>
-
-</div>
-
 </section>
 
-<section id="students" style="display:none">
-
+<section id="p" style="display:none">
 <div class="card">
-
-<h2>
-Tambah Pelajar
-</h2>
-
+<h3>Tambah Pelajar</h3>
 <div class="row">
-
-<input id="newName"
-placeholder="Nama pelajar">
-
-<button class="primary"
-onclick="addStudent()">
-Tambah
-</button>
-
+<input id="newName" placeholder="Nama pelajar">
+<button class="blue" onclick="add()">Tambah</button>
 </div>
-
-<div style="margin-top:10px">
-
-<input id="newGroup"
-placeholder="Nama kelas baru (contoh: Kanak-kanak)">
-
+<input id="newGroup" style="margin-top:8px" placeholder="Kumpulan baru">
 </div>
-
-</div>
-
-<div class="card">
-
-<h2>
-Senarai Pelajar
-</h2>
-
-<div id="studentList">
-</div>
-
-</div>
-
+<div class="card"><h3>Senarai Pelajar</h3><div id="plist"></div></div>
 </section>
 
-<section id="history" style="display:none">
-
+<section id="r" style="display:none">
 <div class="card">
-
-<div class="row">
-
-<h2 style="flex:1">
-Rekod Kehadiran
-</h2>
-
-<button class="danger"
-onclick="clearHistory()">
-Padam Semua
-</button>
-
+<div class="row"><h3 style="flex:1">Rekod Kehadiran</h3><button class="red" onclick="clearRecords()">Padam</button></div>
+<div id="rlist"></div>
 </div>
-
-<div id="historyList">
-</div>
-
-</div>
-
 </section>
 
 </main>
 
 <footer>
-
 <div class="row">
-
-<button class="secondary"
-style="flex:1"
-onclick="openSettings()">
-⚙️ Tetapan
-</button>
-
-<button class="gold"
-style="flex:1"
-onclick="backup()">
-📤 Sandaran
-</button>
-
+<button class="gray" style="flex:1" onclick="settings()">⚙️ Tetapan</button>
+<button class="gold" style="flex:1" onclick="backup()">📤 Sandaran</button>
 </div>
-
 </footer>
 
-<div id="modal"
-class="modal"
-onclick="if(event.target.id==='modal')closeModal()">
-
+<div id="modal" class="modal" onclick="if(event.target===this)closeModal()">
 <div class="sheet">
-
-<h2 id="modalTitle">
-Tetapan
-</h2>
-
-<p id="modalInfo"
-class="muted">
-Tetapan ini menunjukkan jumlah pelajar dan kumpulan yang tersimpan dalam telefon.
-</p>
-
-<div id="settingsPanel">
-
-<div class="muted"
-style="margin-bottom:6px">
-Jumlah pelajar
+<h3 id="mtitle"></h3>
+<p id="minfo"></p>
+<textarea id="backupText" rows="10" style="display:none"></textarea>
+<div class="row">
+<button class="gray" style="flex:1" onclick="closeModal()">Tutup</button>
+<button id="copy" class="blue" style="flex:1;display:none" onclick="copy()">Salin</button>
 </div>
-
-<div id="studentCount"
-style="font-size:24px;font-weight:800;margin-bottom:12px">
-0
-</div>
-
-<div class="muted"
-style="margin-bottom:6px">
-Jumlah kumpulan
-</div>
-
-<div id="groupCount"
-style="font-size:24px;font-weight:800">
-0
-</div>
-
-</div>
-
-<textarea id="backupText"
-rows="8"
-placeholder="Data sandaran akan muncul di sini"
-style="display:none">
-</textarea>
-
-<div class="row"
-style="margin-top:12px">
-
-<button class="secondary"
-style="flex:1"
-onclick="closeModal()">
-Tutup
-</button>
-
-<button id="copyBtn"
-class="primary"
-style="flex:1;display:none"
-onclick="copyBackup()">
-Salin Data
-</button>
-
-</div>
-
 </div>
 </div>
 
 <script>
+const KEY="sm_attendance_v2";
+let db;
+try{db=JSON.parse(localStorage.getItem(KEY)||"null")}catch(e){db=null}
+if(!db)db={students:[],records:[],groups:["Sekolah Minggu"]};
+if(!Array.isArray(db.students))db.students=[];
+if(!Array.isArray(db.records))db.records=[];
+if(!Array.isArray(db.groups))db.groups=["Sekolah Minggu"];
 
-const KEY='sm_attendance_v2';
-
-let db=JSON.parse(localStorage.getItem(KEY)||'null');
-
-if(!db){
-
-const old=JSON.parse(
-localStorage.getItem('sm_attendance_v1')||'null'
-);
-
-db=old||{
-groups:{
-'Sekolah Minggu':[]
-},
-students:[],
-records:[]
-};
-
-}
-
-db.groups=db.groups||{
-'Sekolah Minggu':[]
-};
-
-db.students=
-Array.isArray(db.students)?
-db.students:[];
-
-db.records=
-Array.isArray(db.records)?
-db.records:[];
-
-
-const $=id=>document.getElementById(id);
-
-
-function persist(){
-localStorage.setItem(
-KEY,
-JSON.stringify(db)
-);
-}
-
+const $=x=>document.getElementById(x);
+const saveDB=()=>localStorage.setItem(KEY,JSON.stringify(db));
 
 function today(){
-return new Date()
-.toISOString()
-.slice(0,10);
+ let d=new Date();
+ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 }
-
-
-$('date').value=today();
-
+$("date").value=today();
 
 function groups(){
-
-let gs=[
-...new Set([
-'Sekolah Minggu',
-...Object.keys(db.groups||{}),
-...db.students.map(
-s=>s.group||'Sekolah Minggu'
-)
-])
-];
-
-return gs.filter(Boolean);
-
+ let g=[...db.groups];
+ db.students.forEach(s=>{if(s.group&&!g.includes(s.group))g.push(s.group)});
+ if(!g.length)g=["Sekolah Minggu"];
+ return g;
 }
-
 
 function renderGroups(){
-
-let g=groups();
-
-let old=$('group').value;
-
-$('group').innerHTML=
-g.map(x=>
-`<option value="${esc(x)}">${esc(x)}</option>`
-).join('');
-
-if(g.includes(old))
-$('group').value=old;
-
-else if(g.length)
-$('group').value=g[0];
-
+ let old=$("group").value;
+ $("group").innerHTML=groups().map(g=>"<option>"+safe(g)+"</option>").join("");
+ if(groups().includes(old))$("group").value=old;
 }
 
-
-function norm(v){
-return String(v??'')
-.trim()
-.toLowerCase();
+function students(){
+ let g=$("group").value;
+ return db.students.filter(s=>(s.group||"Sekolah Minggu")===g);
 }
 
-
-function studentsForGroup(){
-
-const selected=
-norm(
-$('group').value||
-'Sekolah Minggu'
-);
-
-return db.students.filter(
-s=>
-norm(
-s.group||'Sekolah Minggu'
-)===selected
-);
-
+function record(){
+ return db.records.find(r=>r.date===$("date").value&&r.group===$("group").value);
 }
 
+function render(){
+ let all=students(),r=record(),st=r?r.status:{};
+ let q=$("search").value.toLowerCase();
+ let list=all.filter(s=>s.name.toLowerCase().includes(q));
+ let h=all.filter(s=>st[s.id]==="Hadir").length;
+ let l=all.filter(s=>st[s.id]==="Lewat").length;
+ let n=all.filter(s=>st[s.id]==="Tidak Hadir").length;
 
-function recordFor(){
+ $("stats").innerHTML=
+ '<div class="stat"><b>'+h+'</b>Hadir</div>'+
+ '<div class="stat"><b>'+l+'</b>Lewat</div>'+
+ '<div class="stat"><b>'+n+'</b>Tidak Hadir</div>';
 
-return db.records.find(
-r=>
-r.date===$('date').value&&
-r.group===$('group').value
-);
+ if(!list.length){
+  $("alist").innerHTML='<div class="empty">Belum ada pelajar.<br>Tambah melalui tab Pelajar.</div>';
+  return;
+ }
 
+ $("alist").innerHTML=list.map(s=>{
+  let x=st[s.id]||"";
+  return '<div class="student"><div class="name">'+safe(s.name)+'</div>'+
+  '<div class="status">'+
+  '<button class="hadir '+(x==="Hadir"?"sel":"")+'" onclick="status(\''+s.id+'\',\'Hadir\')">Hadir</button>'+
+  '<button class="lewat '+(x==="Lewat"?"sel":"")+'" onclick="status(\''+s.id+'\',\'Lewat\')">Lewat</button>'+
+  '<button class="tidak '+(x==="Tidak Hadir"?"sel":"")+'" onclick="status(\''+s.id+'\',\'Tidak Hadir\')">Tidak</button>'+
+  '</div></div>';
+ }).join("");
 }
 
+function status(id,x){
+ let r=record();
+ if(!r){
+  r={date:$("date").value,group:$("group").value,status:{}};
+  db.records.push(r);
+ }
+ r.status[id]=x;
+ saveDB();
+ render();
+}
 
-function renderAttendance(){
+function allHere(){
+ let a=students();
+ if(!a.length){alert("Tiada pelajar.");return}
+ let r=record();
+ if(!r){
+  r={date:$("date").value,group:$("group").value,status:{}};
+  db.records.push(r);
+ }
+ a.forEach(s=>r.status[s.id]="Hadir");
+ saveDB();render();
+}
 
-let arr=studentsForGroup();
+function save(){
+ saveDB();
+ alert("Kehadiran berjaya disimpan.");
+}
 
-let rec=recordFor();
+function add(){
+ let name=$("newName").value.trim();
+ if(!name){alert("Masukkan nama pelajar.");return}
+ let g=$("newGroup").value.trim()||"Sekolah Minggu";
+ db.students.push({id:Date.now().toString(36)+Math.random(),name:name,group:g});
+ if(!db.groups.includes(g))db.groups.push(g);
+ $("newName").value="";$("newGroup").value="";
+ saveDB();renderGroups();$("group").value=g;render();renderStudents();
+ alert("Pelajar berjaya ditambah.");
+}
 
-let map=rec?
-rec.status:{};
+function renderStudents(){
+ if(!db.students.length){
+  $("plist").innerHTML='<div class="empty">Tiada pelajar.</div>';return;
+ }
+ $("plist").innerHTML=db.students.map(s=>
+ '<div class="student"><div class="name">'+safe(s.name)+
+ '<small style="display:block;color:#777">'+safe(s.group||"Sekolah Minggu")+
+ '</small></div><button class="red" onclick="removeStudent(\''+s.id+'\')">🗑️</button></div>'
+ ).join("");
+}
 
-let q=
-$('search')
-.value
-.trim()
-.toLowerCase();
+function removeStudent(id){
+ let s=db.students.find(x=>x.id==id);
+ if(!s)return;
+ if(!confirm("Padam "+s.name+"?"))return;
+ db.students=db.students.filter(x=>x.id!=id);
+ db.records.forEach(r=>{if(r.status)delete r.status[id]});
+ saveDB();renderStudents();render();
+}
 
-if(q)
-arr=arr.filter(
-s=>
-s.name
-.toLowerCase()
-.includes(q)
-);
+function renderRecords(){
+ if(!db.records.length){
+  $("rlist").innerHTML='<div class="empty">Belum ada rekod.</div>';return;
+ }
+ let a=[...db.records].reverse();
+ $("rlist").innerHTML=a.map(r=>{
+  let v=Object.values(r.status||{});
+  return '<div class="student"><div class="name">'+
+  safe(r.date)+'<small style="display:block">'+safe(r.group)+
+  ' • Hadir '+v.filter(x=>x==="Hadir").length+
+  ' • Lewat '+v.filter(x=>x==="Lewat").length+
+  ' • Tidak '+v.filter(x=>x==="Tidak Hadir").length+
+  '</small></div></div>';
+ }).join("");
+}
 
-let all=studentsForGroup();
+function clearRecords(){
+ if(!db.records.length){alert("Tiada rekod.");return}
+ if(confirm("Padam semua rekod?")){
+  db.records=[];saveDB();renderRecords();render();
+ }
+}
 
-let present=
-all.filter(
-s=>map[s.id]==='Hadir'
-).length;
+function tab(x){
+ $("a").style.display=x==="a"?"block":"none";
+ $("p").style.display=x==="p"?"block":"none";
+ $("r").style.display=x==="r"?"block":"none";
+ $("t1").classList.toggle("active",x==="a");
+ $("t2").classList.toggle("active",x==="p");
+ $("t3").classList.toggle("active",x==="r");
+ if(x==="p")renderStudents();
+ if(x==="r")renderRecords();
+ if(x==="a")render();
+}
 
-let late=
-all.filter(
-s=>map[s.id]==='Lewat'
-).length;
+function settings(){
+ $("mtitle").textContent="⚙️ Tetapan";
+ $("minfo").textContent="Pelajar: "+db.students.length+" | Kumpulan: "+groups().length;
+ $("backupText").style.display="none";
+ $("copy").style.display="none";
+ $("modal").classList.add("show");
+}
 
-let absent=
-all.filter(
-s=>map[s.id]==='Tidak Hadir'
-).length;
+function backup(){
+ $("mtitle").textContent="📤 Sandaran Data";
+ $("minfo").textContent="Salin data ini sebagai sandaran.";
+ $("backupText").style.display="block";
+ $("backupText").value=JSON.stringify(db,null,2);
+ $("copy").style.display="block";
+ $("modal").classList.add("show");
+}
 
+function copy(){
+ $("backupText").select();
+ document.execCommand("copy");
+ alert("Data berjaya disalin.");
+}
 
-$('stats').innerHTML=`
+function closeModal(){
+ $("modal").classList.remove("show");
+}
 
-<div class="stat">
-<b>${present}</b>
-<span>Hadir</span>
-</div>
+function safe(x){
+ return String(x).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+}
 
-<div class="stat">
-<b>${late}</b>
-<span>Lewat</span>
-</div>
+$("date").onchange=render;
+$("group").onchange=render;
+$("search").oninput=render;
 
-<div class="stat">
-<b>${absent}</b>
-<span>Tidak Hadir</span>
-</div>
+renderGroups();
+renderStudents();
+render();
+saveDB();
+</script>
 
-`;
-
-
-$('attendance
+</body>
+</html>
