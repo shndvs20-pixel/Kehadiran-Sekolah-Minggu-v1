@@ -4,109 +4,243 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Kehadiran Sekolah Minggu</title>
+
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f3f6fa;font-family:Arial;color:#152238}
-header{background:linear-gradient(135deg,#0b1f3a,#1e5aa8);color:#fff;padding:18px 15px}
-h1{font-size:21px;margin:0 0 5px}main{max-width:700px;margin:auto;padding:12px 10px 80px}
-.card{background:#fff;border-radius:15px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px #0001}
-.row{display:flex;gap:8px;align-items:center}.row>*{min-width:0}
-input,select,button,textarea{font:inherit}input,select,textarea{width:100%;padding:11px;border:1px solid #ccd4df;border-radius:10px}
-button{border:0;border-radius:10px;padding:10px;font-weight:bold}.blue{background:#1e5aa8;color:white}.gray{background:#e9eef5}.red{background:#fde5e2;color:#b52b20}.gold{background:#d6a63c;color:white}
-.tabs{display:flex;gap:5px;margin-bottom:12px}.tabs button{flex:1}.active{background:#0b1f3a!important;color:white}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0}.stat{text-align:center;background:#eef4fb;padding:10px;border-radius:10px}.stat b{display:block;font-size:22px}
-.student{display:flex;align-items:center;gap:7px;padding:10px 0;border-bottom:1px solid #eee}.name{flex:1;font-weight:bold}
-.status{display:flex;gap:3px}.status button{padding:7px;font-size:11px}.hadir{background:#dff5e8;color:#11733e}.lewat{background:#fff0d4;color:#a35b00}.tidak{background:#fde4e1;color:#a62b20}.sel{outline:2px solid currentColor}
-.empty{text-align:center;color:#777;padding:20px}
-footer{position:fixed;bottom:0;left:0;right:0;background:white;padding:8px;border-top:1px solid #ddd}footer .row{max-width:700px;margin:auto}
-.modal{display:none;position:fixed;inset:0;background:#0007;align-items:flex-end}.modal.show{display:flex}.sheet{background:white;width:100%;padding:18px;border-radius:18px 18px 0 0}
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    background:#f3f6fa;
+    font-family:Arial,sans-serif;
+    color:#152238;
+}
+
+header{
+    background:linear-gradient(135deg,#0b1f3a,#1e5aa8);
+    color:white;
+    padding:18px 15px;
+}
+
+h1{
+    font-size:21px;
+    margin:0 0 5px;
+}
+
+main{
+    max-width:700px;
+    margin:auto;
+    padding:12px 10px 80px;
+}
+
+.card{
+    background:white;
+    border-radius:15px;
+    padding:14px;
+    margin-bottom:12px;
+    box-shadow:0 2px 8px #0001;
+}
+
+.row{
+    display:flex;
+    gap:8px;
+    align-items:center;
+}
+
+.row>*{
+    min-width:0;
+}
+
+input,select,button,textarea{
+    font:inherit;
+}
+
+input,select,textarea{
+    width:100%;
+    padding:11px;
+    border:1px solid #ccd4df;
+    border-radius:10px;
+}
+
+button{
+    border:0;
+    border-radius:10px;
+    padding:10px;
+    font-weight:bold;
+}
+
+.blue{
+    background:#1e5aa8;
+    color:white;
+}
+
+.gray{
+    background:#e9eef5;
+}
+
+.red{
+    background:#fde5e2;
+    color:#b52b20;
+}
+
+.gold{
+    background:#d6a63c;
+    color:white;
+}
+
+.tabs{
+    display:flex;
+    gap:5px;
+    margin-bottom:12px;
+}
+
+.tabs button{
+    flex:1;
+}
+
+.active{
+    background:#0b1f3a !important;
+    color:white;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:7px;
+    margin:10px 0;
+}
+
+.stat{
+    text-align:center;
+    background:#eef4fb;
+    padding:10px;
+    border-radius:10px;
+}
+
+.stat b{
+    display:block;
+    font-size:22px;
+}
+
+.student{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    padding:10px 0;
+    border-bottom:1px solid #eee;
+}
+
+.name{
+    flex:1;
+    font-weight:bold;
+}
+
+.status{
+    display:flex;
+    gap:3px;
+}
+
+.status button{
+    padding:7px;
+    font-size:11px;
+}
+
+.hadir{
+    background:#dff5e8;
+    color:#11733e;
+}
+
+.lewat{
+    background:#fff0d4;
+    color:#a35b00;
+}
+
+.tidak{
+    background:#fde4e1;
+    color:#a62b20;
+}
+
+.sel{
+    outline:2px solid currentColor;
+}
+
+.empty{
+    text-align:center;
+    color:#777;
+    padding:20px;
+}
+
+footer{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    background:white;
+    padding:8px;
+    border-top:1px solid #ddd;
+}
+
+footer .row{
+    max-width:700px;
+    margin:auto;
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#0007;
+    align-items:flex-end;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.sheet{
+    background:white;
+    width:100%;
+    padding:18px;
+    border-radius:18px 18px 0 0;
+}
 </style>
 </head>
+
 <body>
 
 <header>
-<h1>⛪ Kehadiran Sekolah Minggu</h1>
-<small>Rekod kehadiran pelajar • Offline</small>
+    <h1>⛪ Kehadiran Sekolah Minggu</h1>
+    <small>Rekod kehadiran pelajar • Offline</small>
 </header>
 
 <main>
 
 <div class="card">
-<div class="row">
-<div style="flex:1"><small>Tarikh</small><input id="date" type="date"></div>
-<div style="flex:1"><small>Kumpulan</small><select id="group"></select></div>
-</div>
+    <div class="row">
+        <div style="flex:1">
+            <small>Tarikh</small>
+            <input id="date" type="date">
+        </div>
+
+        <div style="flex:1">
+            <small>Kumpulan</small>
+            <select id="group"></select>
+        </div>
+    </div>
 </div>
 
 <div class="tabs">
-<button id="t1" class="active" onclick="tab('a')">Kehadiran</button>
-<button id="t2" onclick="tab('p')">Pelajar</button>
-<button id="t3" onclick="tab('r')">Rekod</button>
+    <button id="t1" class="active">Kehadiran</button>
+    <button id="t2">Pelajar</button>
+    <button id="t3">Rekod</button>
 </div>
+
+<!-- KEHADIRAN -->
 
 <section id="a">
+
 <div class="card">
-<div class="row"><h3 style="flex:1">Senarai Pelajar</h3><button class="gray" onclick="allHere()">Semua Hadir</button></div>
-<input id="search" placeholder="Cari nama pelajar...">
-<div id="stats" class="stats"></div>
-<div id="alist"></div>
-<button class="blue" style="width:100%;margin-top:12px" onclick="save()">💾 Simpan Kehadiran</button>
-</div>
-</section>
 
-<section id="p" style="display:none">
-<div class="card">
-<h3>Tambah Pelajar</h3>
-<div class="row">
-<input id="newName" placeholder="Nama pelajar">
-<button class="blue" onclick="add()">Tambah</button>
-</div>
-<input id="newGroup" style="margin-top:8px" placeholder="Kumpulan baru">
-</div>
-<div class="card"><h3>Senarai Pelajar</h3><div id="plist"></div></div>
-</section>
-
-<section id="r" style="display:none">
-<div class="card">
-<div class="row"><h3 style="flex:1">Rekod Kehadiran</h3><button class="red" onclick="clearRecords()">Padam</button></div>
-<div id="rlist"></div>
-</div>
-</section>
-
-</main>
-
-<footer>
-<div class="row">
-<button class="gray" style="flex:1" onclick="settings()">⚙️ Tetapan</button>
-<button class="gold" style="flex:1" onclick="backup()">📤 Sandaran</button>
-</div>
-</footer>
-
-<div id="modal" class="modal" onclick="if(event.target===this)closeModal()">
-<div class="sheet">
-<h3 id="mtitle"></h3>
-<p id="minfo"></p>
-<textarea id="backupText" rows="10" style="display:none"></textarea>
-<div class="row">
-<button class="gray" style="flex:1" onclick="closeModal()">Tutup</button>
-<button id="copy" class="blue" style="flex:1;display:none" onclick="copy()">Salin</button>
-</div>
-</div>
-</div>
-
-<script>
-const KEY="sm_attendance_v2";
-let db;
-try{db=JSON.parse(localStorage.getItem(KEY)||"null")}catch(e){db=null}
-if(!db)db={students:[],records:[],groups:["Sekolah Minggu"]};
-if(!Array.isArray(db.students))db.students=[];
-if(!Array.isArray(db.records))db.records=[];
-if(!Array.isArray(db.groups))db.groups=["Sekolah Minggu"];
-
-const $=x=>document.getElementById(x);
-const saveDB=()=>localStorage.setItem(KEY,JSON.stringify(db));
-
-function today(){
- let d=new Date();
+<div let d=new Date();
  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 }
 $("date").value=today();
