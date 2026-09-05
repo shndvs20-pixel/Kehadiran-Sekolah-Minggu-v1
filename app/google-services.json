@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "287292061990",
+    "project_id": "kehadiran-sekolah-minggu",
+    "storage_bucket": "kehadiran-sekolah-minggu.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:287292061990:android:e3435178075f130ebd69e7",
+        "android_client_info": {
+          "package_name": "com.example.kehadiran"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEaSs2tsneRkvp6d2i8xmyLCEFskWM_Jw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
