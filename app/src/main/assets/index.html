@@ -1645,15 +1645,6 @@ window.onFirebaseReady = function(ready, message) {
         console.log("Firebase siap.");
         showCloudStatus("☁️ Firebase disambungkan");
 
-        /* Cuba ambil data cloud */
-        setTimeout(function() {
-            if (window.Android &&
-                typeof Android.loadData === "function") {
-
-                Android.loadData();
-            }
-        }, 800);
-
     } else {
         console.log("Firebase gagal: " + message);
         showCloudStatus("⚠️ Firebase tidak tersedia");
@@ -1704,9 +1695,11 @@ window.onCloudLoad = function(success, jsonData) {
 
         showCloudStatus("☁️ Data cloud dimuat");
 
-        setTimeout(function() {
-            location.reload();
-        }, 500);
+        loadDB();
+renderGroups();
+renderStudents();
+renderAttendance();
+saveDB();
 
     } catch (e) {
 
