@@ -99,9 +99,6 @@ public class MainActivity extends Activity {
 webView.loadUrl(
     "file:///android_asset/index.html"
 );
-
-// Kemudian login anonymous
-signInFirebase();
     }
 
     private void signInFirebase() {
