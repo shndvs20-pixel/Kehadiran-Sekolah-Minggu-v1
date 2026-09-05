@@ -1,19 +1,15 @@
 package com.example.kehadiran;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.Bundle;
-import android.graphics.Color;
-import android.view.ViewGroup;
-import android.webkit.ConsoleMessage;
+import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.TextView;
 
 public class MainActivity extends Activity {
-
-    TextView debugText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +18,7 @@ public class MainActivity extends Activity {
         WebView webView = new WebView(this);
 
         WebSettings settings = webView.getSettings();
+
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setAllowFileAccess(true);
@@ -29,52 +26,53 @@ public class MainActivity extends Activity {
 
         webView.setWebViewClient(new WebViewClient());
 
-        debugText = new TextView(this);
-        debugText.setText("Memulakan aplikasi...");
-        debugText.setTextColor(Color.RED);
-        debugText.setTextSize(12);
-        debugText.setBackgroundColor(Color.WHITE);
-        debugText.setPadding(12, 8, 12, 8);
-
-        android.widget.LinearLayout layout =
-                new android.widget.LinearLayout(this);
-
-        layout.setOrientation(
-                android.widget.LinearLayout.VERTICAL
-        );
-
-        layout.addView(debugText,
-                new android.widget.LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                ));
-
-        layout.addView(webView,
-                new android.widget.LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        0,
-                        1
-                ));
-
-        setContentView(layout);
-
         webView.setWebChromeClient(new WebChromeClient() {
 
             @Override
-            public boolean onConsoleMessage(ConsoleMessage cm) {
+            public boolean onJsAlert(
+                    WebView view,
+                    String url,
+                    String message,
+                    final JsResult result) {
 
-                String msg =
-                        cm.message()
-                        + "\nBaris: "
-                        + cm.lineNumber();
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Kehadiran Sekolah Minggu")
+                        .setMessage(message)
+                        .setPositiveButton("OK",
+                                (dialog, which) -> result.confirm())
+                        .setOnCancelListener(
+                                dialog -> result.cancel())
+                        .show();
 
-                debugText.setText(
-                        "JAVASCRIPT ERROR / LOG:\n" + msg
-                );
+                return true;
+            }
+
+
+            @Override
+            public boolean onJsConfirm(
+                    WebView view,
+                    String url,
+                    String message,
+                    final JsResult result) {
+
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Kehadiran Sekolah Minggu")
+                        .setMessage(message)
+                        .setNegativeButton("BATAL",
+                                (dialog, which) ->
+                                        result.cancel())
+                        .setPositiveButton("PADAM",
+                                (dialog, which) ->
+                                        result.confirm())
+                        .setOnCancelListener(
+                                dialog -> result.cancel())
+                        .show();
 
                 return true;
             }
         });
+
+        setContentView(webView);
 
         webView.loadUrl(
                 "file:///android_asset/index.html"
