@@ -203,10 +203,9 @@ webView.loadUrl(
                     FieldValue.serverTimestamp()
             );
 
-            db.collection("users")
-                    .document(uid)
-                    .collection("schoolData")
-                    .document("main")
+            db.collection("shared")
+        .collection("schoolData")
+        .document("main")
                     .set(data)
                     .addOnSuccessListener(unused -> {
 
@@ -255,10 +254,9 @@ webView.loadUrl(
             String uid =
                     auth.getCurrentUser().getUid();
 
-            db.collection("users")
-                    .document(uid)
-                    .collection("schoolData")
-                    .document("main")
+            db.collection("shared")
+        .collection("schoolData")
+        .document("main")
                     .get()
                     .addOnSuccessListener(
                             documentSnapshot -> {
