@@ -202,29 +202,30 @@ function add(){
 }
 
 function renderStudents(){
+
   if(!db.students.length){
     $("plist").innerHTML='<div class="empty">Tiada pelajar.</div>';
     return;
   }
 
   $("plist").innerHTML=db.students.map(function(s){
+
     return '<div class="student">'+
       '<div class="name">'+safe(s.name)+
-      '<small style="display:block;color:#777">'+safe(s.group||"Sekolah Minggu")+
+      '<small style="display:block;color:#777">'+
+      safe(s.group||"Sekolah Minggu")+
       '</small></div>'+
-      '<button type="button" class="red deleteBtn" data-id="'+safe(s.id)+'">🗑️</button>'+
+      '<button type="button" class="red" '+
+      'onclick="removeStudent(\'' + s.id + '\')">' +
+      '🗑️</button>'+
       '</div>';
+
   }).join("");
 }
 
-$("plist").addEventListener("click",function(e){
-  var btn=e.target.closest(".deleteBtn");
-  if(btn){
-    removeStudent(btn.getAttribute("data-id"));
-  }
-});
 
 function removeStudent(id){
+
   var s=db.students.find(function(x){
     return String(x.id)===String(id);
   });
@@ -254,7 +255,6 @@ function removeStudent(id){
 
   alert("Pelajar "+s.name+" telah dipadam.");
 }
-
 function renderRecords(){
  if(!db.records.length){
   $("rlist").innerHTML='<div class="empty">Belum ada rekod.</div>';return;
