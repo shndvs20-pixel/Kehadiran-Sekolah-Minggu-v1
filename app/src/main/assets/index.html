@@ -240,229 +240,1397 @@ footer .row{
 
 <div class="card">
 
-<div let d=new Date();
- return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-}
-$("date").value=today();
+<div class="row">
+    <h3 style="flex:1">Senarai Pelajar</h3>
+    <button id="allHereBtn" class="gray">Semua Hadir</button>
+</div>
 
-function groups(){
- let g=[...db.groups];
- db.students.forEach(s=>{if(s.group&&!g.includes(s.group))g.push(s.group)});
- if(!g.length)g=["Sekolah Minggu"];
- return g;
+<input id="search" placeholder="Cari nama pelajar...">
+
+<div id="stats" class="stats"></div>
+
+<div id="alist"></div>
+
+<button id="saveBtn" class="blue"
+style="width:100%;margin-top:12px">
+💾 Simpan Kehadiran
+</button>
+
+</div>
+
+</section>
+
+
+<!-- PELAJAR -->
+
+<section id="p" style="display:none">
+
+<div class="card">
+
+<h3>Tambah Pelajar</h3>
+
+<div class="row">
+
+<input id="newName" placeholder="Nama pelajar">
+
+<button id="addBtn" class="blue">
+Tambah
+</button>
+
+</div>
+
+<input id="newGroup"
+style="margin-top:8px"
+placeholder="Kumpulan baru">
+
+</div>
+
+<div class="card">
+
+<h3>Senarai Pelajar</h3>
+
+<div id="plist"></div>
+
+</div>
+
+</section>
+
+
+<!-- REKOD -->
+
+<section id="r" style="display:none">
+
+<div class="card">
+
+<div class="row">
+
+<h3 style="flex:1">
+Rekod Kehadiran
+</h3>
+
+<button id="clearRecordsBtn" class="red">
+Padam
+</button>
+
+</div>
+
+<div id="rlist"></div>
+
+</div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+<div class="row">
+
+<button id="settingsBtn"
+class="gray"
+style="flex:1">
+⚙️ Tetapan
+</button>
+
+<button id="backupBtn"
+class="gold"
+style="flex:1">
+📤 Sandaran
+</button>
+
+</div>
+
+</footer>
+
+
+<!-- MODAL -->
+
+<div id="modal" class="modal">
+
+<div class="sheet">
+
+<h3 id="mtitle"></h3>
+
+<p id="minfo"></p>
+
+<textarea id="backupText"
+rows="10"
+style="display:none">
+</textarea>
+
+<div class="row">
+
+<button id="closeBtn"
+class="gray"
+style="flex:1">
+Tutup
+</button>
+
+<button id="copyBtn"
+class="blue"
+style="flex:1;display:none">
+Salin
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   DATABASE
+========================= */
+
+var KEY = "sm_attendance_v3";
+
+var db = {
+    students: [],
+    records: [],
+    groups: ["Sekolah Minggu"]
+};
+
+
+/* =========================
+   UTILITI
+========================= */
+
+function $(id){
+    return document.getElementById(id);
 }
+
+
+function loadDB(){
+
+    try{
+
+        var data = localStorage.getItem(KEY);
+
+        if(data){
+            var parsed = JSON.parse(data);
+
+            if(parsed){
+                db = parsed;
+            }
+        }
+
+    }catch(e){
+
+        console.log("Gagal membaca data");
+
+    }
+
+    if(!Array.isArray(db.students)){
+        db.students = [];
+    }
+
+    if(!Array.isArray(db.records)){
+        db.records = [];
+    }
+
+    if(!Array.isArray(db.groups)){
+        db.groups = ["Sekolah Minggu"];
+    }
+}
+
+
+function saveDB(){
+
+    try{
+
+        localStorage.setItem(
+            KEY,
+            JSON.stringify(db)
+        );
+
+    }catch(e){
+
+        console.log("Gagal menyimpan data");
+
+    }
+}
+
+
+function safe(x){
+
+    return String(x)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#39;");
+}
+
+
+function today(){
+
+    var d = new Date();
+
+    var year = d.getFullYear();
+
+    var month = String(
+        d.getMonth()+1
+    );
+
+    if(month.length < 2){
+        month = "0"+month;
+    }
+
+    var day = String(
+        d.getDate()
+    );
+
+    if(day.length < 2){
+        day = "0"+day;
+    }
+
+    return year+"-"+month+"-"+day;
+}
+
+
+/* =========================
+   KUMPULAN
+========================= */
+
+function getGroups(){
+
+    var result = [];
+
+    db.groups.forEach(function(g){
+
+        if(result.indexOf(g) === -1){
+            result.push(g);
+        }
+
+    });
+
+    db.students.forEach(function(s){
+
+        var g = s.group || "Sekolah Minggu";
+
+        if(result.indexOf(g) === -1){
+            result.push(g);
+        }
+
+    });
+
+    if(result.length === 0){
+        result.push("Sekolah Minggu");
+    }
+
+    return result;
+}
+
 
 function renderGroups(){
- let old=$("group").value;
- $("group").innerHTML=groups().map(g=>"<option>"+safe(g)+"</option>").join("");
- if(groups().includes(old))$("group").value=old;
+
+    var select = $("group");
+
+    var old = select.value;
+
+    var list = getGroups();
+
+    select.innerHTML = "";
+
+    list.forEach(function(g){
+
+        var option =
+            document.createElement("option");
+
+        option.value = g;
+        option.textContent = g;
+
+        select.appendChild(option);
+
+    });
+
+    if(list.indexOf(old) !== -1){
+        select.value = old;
+    }
+
 }
 
-function students(){
- let g=$("group").value;
- return db.students.filter(s=>(s.group||"Sekolah Minggu")===g);
+
+/* =========================
+   PELAJAR
+========================= */
+
+function getStudents(){
+
+    var group = $("group").value;
+
+    return db.students.filter(
+        function(s){
+
+            return (
+                s.group || "Sekolah Minggu"
+            ) === group;
+
+        }
+    );
+
 }
 
-function record(){
- return db.records.find(r=>r.date===$("date").value&&r.group===$("group").value);
+
+/* =========================
+   REKOD
+========================= */
+
+function getRecord(){
+
+    var date = $("date").value;
+
+    var group = $("group").value;
+
+    for(
+        var i=0;
+        i<db.records.length;
+        i++
+    ){
+
+        var r = db.records[i];
+
+        if(
+            r.date === date &&
+            r.group === group
+        ){
+
+            return r;
+        }
+
+    }
+
+    return null;
 }
 
-function render(){
- let all=students(),r=record(),st=r?r.status:{};
- let q=$("search").value.toLowerCase();
- let list=all.filter(s=>s.name.toLowerCase().includes(q));
- let h=all.filter(s=>st[s.id]==="Hadir").length;
- let l=all.filter(s=>st[s.id]==="Lewat").length;
- let n=all.filter(s=>st[s.id]==="Tidak Hadir").length;
 
- $("stats").innerHTML=
- '<div class="stat"><b>'+h+'</b>Hadir</div>'+
- '<div class="stat"><b>'+l+'</b>Lewat</div>'+
- '<div class="stat"><b>'+n+'</b>Tidak Hadir</div>';
+/* =========================
+   RENDER KEHADIRAN
+========================= */
 
- if(!list.length){
-  $("alist").innerHTML='<div class="empty">Belum ada pelajar.<br>Tambah melalui tab Pelajar.</div>';
-  return;
- }
+function renderAttendance(){
 
- $("alist").innerHTML=list.map(s=>{
-  let x=st[s.id]||"";
-  return '<div class="student"><div class="name">'+safe(s.name)+'</div>'+
-  '<div class="status">'+
-  '<button class="hadir '+(x==="Hadir"?"sel":"")+'" onclick="status(\''+s.id+'\',\'Hadir\')">Hadir</button>'+
-  '<button class="lewat '+(x==="Lewat"?"sel":"")+'" onclick="status(\''+s.id+'\',\'Lewat\')">Lewat</button>'+
-  '<button class="tidak '+(x==="Tidak Hadir"?"sel":"")+'" onclick="status(\''+s.id+'\',\'Tidak Hadir\')">Tidak</button>'+
-  '</div></div>';
- }).join("");
+    var all = getStudents();
+
+    var r = getRecord();
+
+    var status = {};
+
+    if(r && r.status){
+        status = r.status;
+    }
+
+    var search =
+        $("search").value
+        .toLowerCase();
+
+    var list = all.filter(
+        function(s){
+
+            return s.name
+                .toLowerCase()
+                .indexOf(search) !== -1;
+
+        }
+    );
+
+
+    var hadir = 0;
+    var lewat = 0;
+    var tidak = 0;
+
+
+    all.forEach(function(s){
+
+        if(status[s.id] === "Hadir"){
+            hadir++;
+        }
+
+        if(status[s.id] === "Lewat"){
+            lewat++;
+        }
+
+        if(status[s.id] === "Tidak Hadir"){
+            tidak++;
+        }
+
+    });
+
+
+    $("stats").innerHTML =
+        '<div class="stat"><b>'
+        + hadir +
+        '</b>Hadir</div>' +
+
+        '<div class="stat"><b>'
+        + lewat +
+        '</b>Lewat</div>' +
+
+        '<div class="stat"><b>'
+        + tidak +
+        '</b>Tidak Hadir</div>';
+
+
+    if(list.length === 0){
+
+        $("alist").innerHTML =
+            '<div class="empty">' +
+            'Belum ada pelajar.<br>' +
+            'Tambah melalui tab Pelajar.' +
+            '</div>';
+
+        return;
+    }
+
+
+    $("alist").innerHTML = "";
+
+
+    list.forEach(function(s){
+
+        var current =
+            status[s.id] || "";
+
+
+        var item =
+            document.createElement("div");
+
+        item.className = "student";
+
+
+        var name =
+            document.createElement("div");
+
+        name.className = "name";
+
+        name.textContent = s.name;
+
+
+        var statusDiv =
+            document.createElement("div");
+
+        statusDiv.className = "status";
+
+
+        var hadirBtn =
+            document.createElement("button");
+
+        hadirBtn.className =
+            "hadir";
+
+        hadirBtn.textContent =
+            "Hadir";
+
+        if(current === "Hadir"){
+            hadirBtn.className += " sel";
+        }
+
+
+        var lewatBtn =
+            document.createElement("button");
+
+        lewatBtn.className =
+            "lewat";
+
+        lewatBtn.textContent =
+            "Lewat";
+
+        if(current === "Lewat"){
+            lewatBtn.className += " sel";
+        }
+
+
+        var tidakBtn =
+            document.createElement("button");
+
+        tidakBtn.className =
+            "tidak";
+
+        tidakBtn.textContent =
+            "Tidak";
+
+        if(current === "Tidak Hadir"){
+            tidakBtn.className += " sel";
+        }
+
+
+        hadirBtn.addEventListener(
+            "click",
+            function(){
+
+                setAttendance(
+                    s.id,
+                    "Hadir"
+                );
+
+            }
+        );
+
+
+        lewatBtn.addEventListener(
+            "click",
+            function(){
+
+                setAttendance(
+                    s.id,
+                    "Lewat"
+                );
+
+            }
+        );
+
+
+        tidakBtn.addEventListener(
+            "click",
+            function(){
+
+                setAttendance(
+                    s.id,
+                    "Tidak Hadir"
+                );
+
+            }
+        );
+
+
+        statusDiv.appendChild(hadirBtn);
+        statusDiv.appendChild(lewatBtn);
+        statusDiv.appendChild(tidakBtn);
+
+        item.appendChild(name);
+        item.appendChild(statusDiv);
+
+        $("alist").appendChild(item);
+
+    });
+
 }
 
-function status(id,x){
- let r=record();
- if(!r){
-  r={date:$("date").value,group:$("group").value,status:{}};
-  db.records.push(r);
- }
- r.status[id]=x;
- saveDB();
- render();
+
+/* =========================
+   SET STATUS
+========================= */
+
+function setAttendance(id,value){
+
+    var r = getRecord();
+
+    if(!r){
+
+        r = {
+            date: $("date").value,
+            group: $("group").value,
+            status: {}
+        };
+
+        db.records.push(r);
+    }
+
+    if(!r.status){
+        r.status = {};
+    }
+
+    r.status[id] = value;
+
+    saveDB();
+
+    renderAttendance();
 }
+
+
+/* =========================
+   SEMUA HADIR
+========================= */
 
 function allHere(){
- let a=students();
- if(!a.length){alert("Tiada pelajar.");return}
- let r=record();
- if(!r){
-  r={date:$("date").value,group:$("group").value,status:{}};
-  db.records.push(r);
- }
- a.forEach(s=>r.status[s.id]="Hadir");
- saveDB();render();
+
+    var students =
+        getStudents();
+
+    if(students.length === 0){
+
+        alert(
+            "Tiada pelajar."
+        );
+
+        return;
+    }
+
+
+    var r = getRecord();
+
+    if(!r){
+
+        r = {
+            date: $("date").value,
+            group: $("group").value,
+            status: {}
+        };
+
+        db.records.push(r);
+
+    }
+
+
+    students.forEach(function(s){
+
+        r.status[s.id] =
+            "Hadir";
+
+    });
+
+
+    saveDB();
+
+    renderAttendance();
+
 }
 
-function save(){
- saveDB();
- alert("Kehadiran berjaya disimpan.");
+
+/* =========================
+   SIMPAN
+========================= */
+
+function saveAttendance(){
+
+    saveDB();
+
+    alert(
+        "Kehadiran berjaya disimpan."
+    );
+
 }
 
-function add(){
- let name=$("newName").value.trim();
- if(!name){alert("Masukkan nama pelajar.");return}
- let g=$("newGroup").value.trim()||"Sekolah Minggu";
- db.students.push({id:Date.now().toString(36)+Math.random(),name:name,group:g});
- if(!db.groups.includes(g))db.groups.push(g);
- $("newName").value="";$("newGroup").value="";
- saveDB();renderGroups();$("group").value=g;render();renderStudents();
- alert("Pelajar berjaya ditambah.");
+
+/* =========================
+   TAMBAH PELAJAR
+========================= */
+
+function addStudent(){
+
+    var name =
+        $("newName").value.trim();
+
+    if(!name){
+
+        alert(
+            "Masukkan nama pelajar."
+        );
+
+        return;
+    }
+
+
+    var group =
+        $("newGroup").value.trim();
+
+
+    if(!group){
+
+        group = "Sekolah Minggu";
+
+    }
+
+
+    var student = {
+
+        id:
+            String(Date.now()) +
+            "_" +
+            String(
+                Math.floor(
+                    Math.random()*100000
+                )
+            ),
+
+        name: name,
+
+        group: group
+
+    };
+
+
+    db.students.push(student);
+
+
+    if(
+        db.groups.indexOf(group) === -1
+    ){
+
+        db.groups.push(group);
+
+    }
+
+
+    $("newName").value = "";
+
+    $("newGroup").value = "";
+
+
+    saveDB();
+
+    renderGroups();
+
+    $("group").value = group;
+
+    renderAttendance();
+
+    renderStudents();
+
+
+    alert(
+        "Pelajar berjaya ditambah."
+    );
+
 }
+
+
+/* =========================
+   SENARAI PELAJAR
+========================= */
 
 function renderStudents(){
 
-  if(!db.students.length){
-    $("plist").innerHTML='<div class="empty">Tiada pelajar.</div>';
-    return;
-  }
+    var list =
+        $("plist");
 
-  $("plist").innerHTML=db.students.map(function(s){
+    list.innerHTML = "";
 
-    return '<div class="student">'+
-      '<div class="name">'+safe(s.name)+
-      '<small style="display:block;color:#777">'+
-      safe(s.group||"Sekolah Minggu")+
-      '</small></div>'+
-      '<button type="button" class="red" '+
-      ''onclick="alert(\'BUTANG BERFUNGSI\')">' +
-      '🗑️</button>'+
-      '</div>';
 
-  }).join("");
+    if(db.students.length === 0){
+
+        list.innerHTML =
+            '<div class="empty">' +
+            'Tiada pelajar.' +
+            '</div>';
+
+        return;
+    }
+
+
+    db.students.forEach(function(s){
+
+        var item =
+            document.createElement("div");
+
+        item.className =
+            "student";
+
+
+        var name =
+            document.createElement("div");
+
+        name.className =
+            "name";
+
+        name.innerHTML =
+            safe(s.name) +
+            '<small style="display:block;color:#777">' +
+            safe(
+                s.group ||
+                "Sekolah Minggu"
+            ) +
+            '</small>';
+
+
+        var button =
+            document.createElement("button");
+
+        button.type = "button";
+
+        button.className = "red";
+
+        button.textContent = "🗑️";
+
+
+        button.addEventListener(
+            "click",
+            function(){
+
+                removeStudent(
+                    s.id
+                );
+
+            }
+        );
+
+
+        item.appendChild(name);
+
+        item.appendChild(button);
+
+        list.appendChild(item);
+
+    });
+
 }
 
+
+/* =========================
+   PADAM PELAJAR
+========================= */
 
 function removeStudent(id){
 
-  var s=db.students.find(function(x){
-    return String(x.id)===String(id);
-  });
+    var student = null;
 
-  if(!s){
-    alert("Pelajar tidak dijumpai.");
-    return;
-  }
 
-  if(!confirm("Padam "+s.name+"?")){
-    return;
-  }
+    db.students.forEach(
+        function(s){
 
-  db.students=db.students.filter(function(x){
-    return String(x.id)!==String(id);
-  });
+            if(
+                String(s.id) ===
+                String(id)
+            ){
 
-  db.records.forEach(function(r){
-    if(r.status){
-      delete r.status[id];
+                student = s;
+
+            }
+
+        }
+    );
+
+
+    if(!student){
+
+        alert(
+            "Pelajar tidak dijumpai."
+        );
+
+        return;
     }
-  });
 
-  saveDB();
-  renderStudents();
-  render();
 
-  alert("Pelajar "+s.name+" telah dipadam.");
+    if(
+        !confirm(
+            "Padam " +
+            student.name +
+            "?"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    db.students =
+        db.students.filter(
+            function(s){
+
+                return String(s.id) !==
+                    String(id);
+
+            }
+        );
+
+
+    db.records.forEach(
+        function(r){
+
+            if(r.status){
+
+                delete r.status[id];
+
+            }
+
+        }
+    );
+
+
+    saveDB();
+
+    renderStudents();
+
+    renderAttendance();
+
+
+    alert(
+        "Pelajar " +
+        student.name +
+        " telah dipadam."
+    );
+
 }
+
+
+/* =========================
+   REKOD KEHADIRAN
+========================= */
+
 function renderRecords(){
- if(!db.records.length){
-  $("rlist").innerHTML='<div class="empty">Belum ada rekod.</div>';return;
- }
- let a=[...db.records].reverse();
- $("rlist").innerHTML=a.map(r=>{
-  let v=Object.values(r.status||{});
-  return '<div class="student"><div class="name">'+
-  safe(r.date)+'<small style="display:block">'+safe(r.group)+
-  ' • Hadir '+v.filter(x=>x==="Hadir").length+
-  ' • Lewat '+v.filter(x=>x==="Lewat").length+
-  ' • Tidak '+v.filter(x=>x==="Tidak Hadir").length+
-  '</small></div></div>';
- }).join("");
+
+    var list =
+        $("rlist");
+
+    list.innerHTML = "";
+
+
+    if(db.records.length === 0){
+
+        list.innerHTML =
+            '<div class="empty">' +
+            'Belum ada rekod.' +
+            '</div>';
+
+        return;
+    }
+
+
+    var records =
+        db.records.slice();
+
+    records.reverse();
+
+
+    records.forEach(function(r){
+
+        var values = [];
+
+
+        if(r.status){
+
+            for(
+                var key in r.status
+            ){
+
+                values.push(
+                    r.status[key]
+                );
+
+            }
+
+        }
+
+
+        var item =
+            document.createElement("div");
+
+        item.className =
+            "student";
+
+
+        var name =
+            document.createElement("div");
+
+        name.className =
+            "name";
+
+
+        name.innerHTML =
+            safe(r.date) +
+
+            '<small style="display:block">' +
+
+            safe(r.group) +
+
+            ' • Hadir ' +
+
+            countStatus(
+                values,
+                "Hadir"
+            ) +
+
+            ' • Lewat ' +
+
+            countStatus(
+                values,
+                "Lewat"
+            ) +
+
+            ' • Tidak ' +
+
+            countStatus(
+                values,
+                "Tidak Hadir"
+            ) +
+
+            '</small>';
+
+
+        item.appendChild(name);
+
+        list.appendChild(item);
+
+    });
+
 }
+
+
+function countStatus(array,value){
+
+    var count = 0;
+
+    array.forEach(
+        function(x){
+
+            if(x === value){
+                count++;
+            }
+
+        }
+    );
+
+    return count;
+}
+
+
+/* =========================
+   PADAM SEMUA REKOD
+========================= */
 
 function clearRecords(){
- if(!db.records.length){alert("Tiada rekod.");return}
- if(confirm("Padam semua rekod?")){
-  db.records=[];saveDB();renderRecords();render();
- }
+
+    if(db.records.length === 0){
+
+        alert(
+            "Tiada rekod."
+        );
+
+        return;
+    }
+
+
+    if(
+        confirm(
+            "Padam semua rekod?"
+        )
+    ){
+
+        db.records = [];
+
+        saveDB();
+
+        renderRecords();
+
+        renderAttendance();
+
+    }
+
 }
 
-function tab(x){
- $("a").style.display=x==="a"?"block":"none";
- $("p").style.display=x==="p"?"block":"none";
- $("r").style.display=x==="r"?"block":"none";
- $("t1").classList.toggle("active",x==="a");
- $("t2").classList.toggle("active",x==="p");
- $("t3").classList.toggle("active",x==="r");
- if(x==="p")renderStudents();
- if(x==="r")renderRecords();
- if(x==="a")render();
+
+/* =========================
+   TAB
+========================= */
+
+function showTab(tabName){
+
+    $("a").style.display =
+        tabName === "a"
+        ? "block"
+        : "none";
+
+    $("p").style.display =
+        tabName === "p"
+        ? "block"
+        : "none";
+
+    $("r").style.display =
+        tabName === "r"
+        ? "block"
+        : "none";
+
+
+    $("t1").className =
+        tabName === "a"
+        ? "active"
+        : "";
+
+    $("t2").className =
+        tabName === "p"
+        ? "active"
+        : "";
+
+    $("t3").className =
+        tabName === "r"
+        ? "active"
+        : "";
+
+
+    if(tabName === "a"){
+        renderAttendance();
+    }
+
+    if(tabName === "p"){
+        renderStudents();
+    }
+
+    if(tabName === "r"){
+        renderRecords();
+    }
+
 }
 
-function settings(){
- $("mtitle").textContent="⚙️ Tetapan";
- $("minfo").textContent="Pelajar: "+db.students.length+" | Kumpulan: "+groups().length;
- $("backupText").style.display="none";
- $("copy").style.display="none";
- $("modal").classList.add("show");
+
+/* =========================
+   TETAPAN
+========================= */
+
+function openSettings(){
+
+    $("mtitle").textContent =
+        "⚙️ Tetapan";
+
+    $("minfo").textContent =
+        "Pelajar: " +
+        db.students.length +
+        " | Kumpulan: " +
+        getGroups().length;
+
+
+    $("backupText").style.display =
+        "none";
+
+    $("copyBtn").style.display =
+        "none";
+
+
+    $("modal").className =
+        "modal show";
+
 }
 
-function backup(){
- $("mtitle").textContent="📤 Sandaran Data";
- $("minfo").textContent="Salin data ini sebagai sandaran.";
- $("backupText").style.display="block";
- $("backupText").value=JSON.stringify(db,null,2);
- $("copy").style.display="block";
- $("modal").classList.add("show");
+
+/* =========================
+   BACKUP
+========================= */
+
+function openBackup(){
+
+    $("mtitle").textContent =
+        "📤 Sandaran Data";
+
+    $("minfo").textContent =
+        "Salin data ini sebagai sandaran.";
+
+
+    $("backupText").style.display =
+        "block";
+
+    $("backupText").value =
+        JSON.stringify(
+            db,
+            null,
+            2
+        );
+
+
+    $("copyBtn").style.display =
+        "block";
+
+
+    $("modal").className =
+        "modal show";
+
 }
 
-function copy(){
- $("backupText").select();
- document.execCommand("copy");
- alert("Data berjaya disalin.");
+
+/* =========================
+   SALIN BACKUP
+========================= */
+
+function copyBackup(){
+
+    var text =
+        $("backupText");
+
+
+    text.select();
+
+
+    try{
+
+        document.execCommand(
+            "copy"
+        );
+
+        alert(
+            "Data berjaya disalin."
+        );
+
+    }catch(e){
+
+        alert(
+            "Tidak dapat menyalin data."
+        );
+
+    }
+
 }
+
+
+/* =========================
+   TUTUP MODAL
+========================= */
 
 function closeModal(){
- $("modal").classList.remove("show");
+
+    $("modal").className =
+        "modal";
+
 }
 
-function safe(x){
- return String(x).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
-}
 
-$("date").onchange=render;
-$("group").onchange=render;
-$("search").oninput=render;
+/* =========================
+   EVENT LISTENER
+========================= */
+
+/* TAB */
+
+$("t1").addEventListener(
+    "click",
+    function(){
+        showTab("a");
+    }
+);
+
+$("t2").addEventListener(
+    "click",
+    function(){
+        showTab("p");
+    }
+);
+
+$("t3").addEventListener(
+    "click",
+    function(){
+        showTab("r");
+    }
+);
+
+
+/* KEHADIRAN */
+
+$("allHereBtn").addEventListener(
+    "click",
+    allHere
+);
+
+
+$("saveBtn").addEventListener(
+    "click",
+    saveAttendance
+);
+
+
+/* PELAJAR */
+
+$("addBtn").addEventListener(
+    "click",
+    addStudent
+);
+
+
+/* REKOD */
+
+$("clearRecordsBtn")
+.addEventListener(
+    "click",
+    clearRecords
+);
+
+
+/* FOOTER */
+
+$("settingsBtn")
+.addEventListener(
+    "click",
+    openSettings
+);
+
+
+$("backupBtn")
+.addEventListener(
+    "click",
+    openBackup
+);
+
+
+$("copyBtn")
+.addEventListener(
+    "click",
+    copyBackup
+);
+
+
+$("closeBtn")
+.addEventListener(
+    "click",
+    closeModal
+);
+
+
+/* MODAL */
+
+$("modal").addEventListener(
+    "click",
+    function(e){
+
+        if(e.target === $("modal")){
+            closeModal();
+        }
+
+    }
+);
+
+
+/* SEARCH */
+
+$("search").addEventListener(
+    "input",
+    function(){
+
+        renderAttendance();
+
+    }
+);
+
+
+/* TARIKH */
+
+$("date").addEventListener(
+    "change",
+    function(){
+
+        renderAttendance();
+
+    }
+);
+
+
+/* KUMPULAN */
+
+$("group").addEventListener(
+    "change",
+    function(){
+
+        renderAttendance();
+
+    }
+);
+
+
+/* =========================
+   MULAKAN APLIKASI
+========================= */
+
+loadDB();
+
+$("date").value = today();
 
 renderGroups();
+
 renderStudents();
-render();
+
+renderAttendance();
+
 saveDB();
+
 </script>
 
 </body>
