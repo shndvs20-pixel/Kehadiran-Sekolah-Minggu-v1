@@ -616,13 +616,42 @@ function renderAttendance(){
 
     var all = getStudents();
 
+var group = $("group").value;
+
+var status = {};
+
+if(group === "__ALL__"){
+
+    var date = $("date").value;
+
+    db.records.forEach(function(r){
+
+        if(r.date === date && r.status){
+
+            for(var id in r.status){
+
+                status[id] =
+                    r.status[id];
+
+            }
+
+        }
+
+    });
+
+}else{
+
     var r = getRecord();
 
-    var status = {};
-
     if(r && r.status){
+
         status = r.status;
+
     }
+
+}
+
+}
 
     var search =
         $("search").value
@@ -817,17 +846,51 @@ function renderAttendance(){
 
 function setAttendance(id,value){
 
-    var r = getRecord();
+    var student = null;
+
+    for(var i=0; i<db.students.length; i++){
+
+        if(
+            String(db.students[i].id) ===
+            String(id)
+        ){
+
+            student = db.students[i];
+
+            break;
+
+        }
+
+    }
+
+    if(!student){
+        return;
+    }
+
+    var group =
+        student.group ||
+        "Sekolah Minggu";
+
+    var r =
+        getRecordForGroup(
+            $("date").value,
+            group
+        );
 
     if(!r){
 
         r = {
+
             date: $("date").value,
-            group: $("group").value,
+
+            group: group,
+
             status: {}
+
         };
 
         db.records.push(r);
+
     }
 
     if(!r.status){
@@ -839,6 +902,7 @@ function setAttendance(id,value){
     saveDB();
 
     renderAttendance();
+
 }
 
 
@@ -858,31 +922,68 @@ function allHere(){
         );
 
         return;
-    }
-
-
-    var r = getRecord();
-
-    if(!r){
-
-        r = {
-            date: $("date").value,
-            group: $("group").value,
-            status: {}
-        };
-
-        db.records.push(r);
 
     }
 
+    var date =
+        $("date").value;
+
+    var groups = {};
 
     students.forEach(function(s){
 
-        r.status[s.id] =
-            "Hadir";
+        var group =
+            s.group ||
+            "Sekolah Minggu";
+
+        if(!groups[group]){
+
+            groups[group] = [];
+
+        }
+
+        groups[group].push(s);
 
     });
 
+    for(var groupName in groups){
+
+        var r =
+            getRecordForGroup(
+                date,
+                groupName
+            );
+
+        if(!r){
+
+            r = {
+
+                date: date,
+
+                group: groupName,
+
+                status: {}
+
+            };
+
+            db.records.push(r);
+
+        }
+
+        if(!r.status){
+            r.status = {};
+        }
+
+        groups[groupName].forEach(
+            function(s){
+
+                r.status[s.id] =
+                    "Hadir";
+
+            }
+        );
+
+    }
 
     saveDB();
 
