@@ -204,9 +204,8 @@ webView.loadUrl(
             );
 
             db.collection("shared")
-        .collection("schoolData")
-        .document("main")
-                    .set(data)
+        .document("schoolData")
+        .set(data)
                     .addOnSuccessListener(unused -> {
 
                         notifyJavascript(
@@ -255,9 +254,8 @@ webView.loadUrl(
                     auth.getCurrentUser().getUid();
 
             db.collection("shared")
-        .collection("schoolData")
-        .document("main")
-                    .get()
+    .document("schoolData")
+    .get()
                     .addOnSuccessListener(
                             documentSnapshot -> {
 
