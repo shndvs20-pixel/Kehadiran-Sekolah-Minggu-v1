@@ -1631,6 +1631,334 @@ renderAttendance();
 
 saveDB();
 
+    /* FIREBASE CLOUD */
+
+var firebaseCloudReady = false;
+var firebaseCloudBusy = false;
+
+/* STATUS FIREBASE */
+window.onFirebaseReady = function(ready, message) {
+
+    firebaseCloudReady = ready;
+
+    if (ready) {
+        console.log("Firebase siap.");
+        showCloudStatus("☁️ Firebase disambungkan");
+
+        /* Cuba ambil data cloud */
+        setTimeout(function() {
+            if (window.Android &&
+                typeof Android.loadData === "function") {
+
+                Android.loadData();
+            }
+        }, 800);
+
+    } else {
+        console.log("Firebase gagal: " + message);
+        showCloudStatus("⚠️ Firebase tidak tersedia");
+    }
+};
+
+
+/* STATUS SIMPAN CLOUD */
+window.onCloudSave = function(success, message) {
+
+    firebaseCloudBusy = false;
+
+    if (success) {
+        showCloudStatus("☁️ Data disimpan ke cloud");
+    } else {
+        showCloudStatus("❌ Gagal simpan: " + message);
+    }
+};
+
+
+/* DATA DARI CLOUD */
+window.onCloudLoad = function(success, jsonData) {
+
+    firebaseCloudBusy = false;
+
+    if (!success) {
+        showCloudStatus("❌ Gagal mengambil data cloud");
+        return;
+    }
+
+    if (!jsonData) {
+        showCloudStatus("☁️ Belum ada data cloud");
+        return;
+    }
+
+    try {
+
+        var cloudData = JSON.parse(jsonData);
+
+        localStorage.clear();
+
+        Object.keys(cloudData).forEach(function(key) {
+            localStorage.setItem(
+                key,
+                cloudData[key]
+            );
+        });
+
+        showCloudStatus("☁️ Data cloud dimuat");
+
+        setTimeout(function() {
+            location.reload();
+        }, 500);
+
+    } catch (e) {
+
+        console.log(
+            "Data cloud tidak sah:",
+            e
+        );
+
+        showCloudStatus(
+            "⚠️ Data cloud tidak dapat dibaca"
+        );
+    }
+};
+
+
+/* SIMPAN SEMUA DATA LOCALSTORAGE KE CLOUD */
+function saveToCloud() {
+
+    if (!window.Android ||
+        typeof Android.saveData !== "function") {
+
+        alert(
+            "Firebase belum tersedia."
+        );
+
+        return;
+    }
+
+    if (!firebaseCloudReady) {
+
+        alert(
+            "Firebase masih belum bersedia. Sila tunggu sebentar."
+        );
+
+        return;
+    }
+
+    if (firebaseCloudBusy) {
+        return;
+    }
+
+    firebaseCloudBusy = true;
+
+    try {
+
+        var allData = {};
+
+        for (var i = 0;
+             i < localStorage.length;
+             i++) {
+
+            var key =
+                localStorage.key(i);
+
+            allData[key] =
+                localStorage.getItem(key);
+        }
+
+        Android.saveData(
+            JSON.stringify(allData)
+        );
+
+    } catch (e) {
+
+        firebaseCloudBusy = false;
+
+        alert(
+            "Gagal menyediakan data untuk cloud."
+        );
+    }
+}
+
+
+/* AMBIL DATA DARI CLOUD */
+function loadFromCloud() {
+
+    if (!window.Android ||
+        typeof Android.loadData !== "function") {
+
+        alert(
+            "Firebase belum tersedia."
+        );
+
+        return;
+    }
+
+    if (!firebaseCloudReady) {
+
+        alert(
+            "Firebase masih belum bersedia."
+        );
+
+        return;
+    }
+
+    if (firebaseCloudBusy) {
+        return;
+    }
+
+    firebaseCloudBusy = true;
+
+    Android.loadData();
+}
+
+
+/* PAPAR STATUS CLOUD */
+function showCloudStatus(text) {
+
+    var el =
+        document.getElementById(
+            "firebaseStatus"
+        );
+
+    if (el) {
+        el.innerText = text;
+
+        setTimeout(function() {
+
+            el.innerText =
+                "☁️ Cloud";
+
+        }, 3000);
+    }
+}
+
+
+/* TAMBAH PANEL CLOUD */
+(function() {
+
+    var box =
+        document.createElement("div");
+
+    box.id =
+        "firebaseCloudPanel";
+
+    box.style.position =
+        "fixed";
+
+    box.style.bottom =
+        "15px";
+
+    box.style.right =
+        "15px";
+
+    box.style.zIndex =
+        "99999";
+
+    box.style.display =
+        "flex";
+
+    box.style.flexDirection =
+        "column";
+
+    box.style.gap =
+        "6px";
+
+    box.style.fontFamily =
+        "Arial,sans-serif";
+
+
+    var status =
+        document.createElement("div");
+
+    status.id =
+        "firebaseStatus";
+
+    status.innerText =
+        "☁️ Cloud";
+
+    status.style.background =
+        "#ffffff";
+
+    status.style.padding =
+        "7px 10px";
+
+    status.style.borderRadius =
+        "10px";
+
+    status.style.fontSize =
+        "12px";
+
+    status.style.boxShadow =
+        "0 2px 8px rgba(0,0,0,.2)";
+
+    box.appendChild(status);
+
+
+    var saveButton =
+        document.createElement("button");
+
+    saveButton.innerText =
+        "☁️ Simpan Cloud";
+
+    saveButton.style.padding =
+        "9px 12px";
+
+    saveButton.style.borderRadius =
+        "10px";
+
+    saveButton.style.border =
+        "0";
+
+    saveButton.style.cursor =
+        "pointer";
+
+    saveButton.onclick =
+        function() {
+
+            saveToCloud();
+
+        };
+
+    box.appendChild(saveButton);
+
+
+    var loadButton =
+        document.createElement("button");
+
+    loadButton.innerText =
+        "☁️ Muat Cloud";
+
+    loadButton.style.padding =
+        "9px 12px";
+
+    loadButton.style.borderRadius =
+        "10px";
+
+    loadButton.style.border =
+        "0";
+
+    loadButton.style.cursor =
+        "pointer";
+
+    loadButton.onclick =
+        function() {
+
+            if (confirm(
+                "Muat data daripada cloud?\n\nData dalam telefon akan digantikan dengan data cloud."
+            )) {
+
+                loadFromCloud();
+
+            }
+
+        };
+
+    box.appendChild(loadButton);
+
+
+    document.body.appendChild(box);
+
+})();
 </script>
 
 </body>
