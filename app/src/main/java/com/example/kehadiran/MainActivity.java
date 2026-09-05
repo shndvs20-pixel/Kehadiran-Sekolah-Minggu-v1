@@ -95,12 +95,13 @@ public class MainActivity extends Activity {
 
         setContentView(webView);
 
-        // Login anonymous
-        signInFirebase();
+        // Load halaman dahulu
+webView.loadUrl(
+    "file:///android_asset/index.html"
+);
 
-        webView.loadUrl(
-                "file:///android_asset/index.html"
-        );
+// Kemudian login anonymous
+signInFirebase();
     }
 
     private void signInFirebase() {
