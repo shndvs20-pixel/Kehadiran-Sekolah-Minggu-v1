@@ -579,7 +579,26 @@ function getStudents(){
 /* =========================
    REKOD
 ========================= */
+function getRecordForGroup(date, group){
 
+    for(
+        var i = 0;
+        i < db.records.length;
+        i++
+    ){
+
+        var r = db.records[i];
+
+        if(
+            r.date === date &&
+            r.group === group
+        ){
+            return r;
+        }
+    }
+
+    return null;
+}
 function getRecord(){
 
     var date = $("date").value;
@@ -700,7 +719,18 @@ if(group === "__ALL__"){
         '<div class="stat"><b>'
         + tidak +
         '</b>Tidak Hadir</div>';
+document.querySelectorAll("#stats .stat")
+    .forEach(function(btn){
 
+        btn.style.cursor = "pointer";
+
+        btn.onclick = function(){
+
+            alert("Anda tekan " + btn.textContent);
+
+        };
+
+    });
 
     if(list.length === 0){
 
